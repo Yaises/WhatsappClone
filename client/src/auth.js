@@ -7,7 +7,7 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth'
-import { auth, googleProvider } from './firebase.js'
+import { auth, githubProvider, googleProvider } from './firebase.js'
 
 export const usuarioActual = ref(null)
 export const cargandoUsuario = ref(true)
@@ -33,6 +33,11 @@ export async function loginConEmail(email, password) {
 
 export async function loginConGoogle() {
   const result = await signInWithPopup(auth, googleProvider)
+  return result.user
+}
+
+export async function loginConGithub() {
+  const result = await signInWithPopup(auth, githubProvider)
   return result.user
 }
 

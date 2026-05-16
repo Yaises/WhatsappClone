@@ -34,6 +34,10 @@
       <button class="google-button" type="button" :disabled="loading" @click="loginGoogle">
         Entrar con Google
       </button>
+
+      <button class="github-button" type="button" :disabled="loading" @click="loginGithub">
+        Entrar con GitHub
+      </button>
     </section>
   </main>
 </template>
@@ -41,7 +45,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { loginConEmail, loginConGoogle, registrarConEmail } from '../auth.js'
+import { loginConEmail, loginConGithub, loginConGoogle, registrarConEmail } from '../auth.js'
 import { obtenerPerfil } from '../profiles.js'
 
 const router = useRouter()
@@ -102,6 +106,20 @@ async function loginGoogle() {
     loading.value = false
   }
 }
+
+async function loginGithub() {
+  error.value = ''
+  loading.value = true
+
+  try {
+    const user = await loginConGithub()
+    await goNext(user)
+  } catch (firebaseError) {
+    showError(firebaseError)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -136,7 +154,8 @@ h1 {
 
 .tabs button,
 .primary-button,
-.google-button {
+.google-button,
+.github-button {
   border: 0;
   border-radius: 8px;
   padding: 11px;
@@ -174,11 +193,16 @@ input {
   border-radius: 8px;
 }
 
-.google-button {
+.google-button,
+.github-button {
   width: 100%;
   margin-top: 14px;
   color: #e9edef;
   background: #2a3942;
+}
+
+.github-button {
+  margin-top: 8px;
 }
 
 button:disabled {
